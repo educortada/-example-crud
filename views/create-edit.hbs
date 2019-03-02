@@ -1,0 +1,20 @@
+<form action="/" method="POST">
+  <input type="text" name="name" value="{{name}}">
+
+  <input type="text" name="special" value="{{special}}">
+
+  <select id="size-select" name="size" value="{{size}}">
+    <option value="small">Small</option>
+    <option value="medium">Medium</option>
+    <option value="big">Big</option>
+  </select>
+
+
+  {{#if name}}
+    <input type="hidden" name="_id" value="{{_id}}">
+    <button type="submit">Edit tortilla</button>
+  {{else}}
+    <button type="submit">Create yo' tortilla</button>
+  {{/if}}
+
+</form>

@@ -1,0 +1,8 @@
+<h1>{{name}}</h1>
+<p>Special ingredient (if any): {{special}}</p>
+<p>Size: {{size}}</p>
+<a href="/tortillas/{{_id}}/edit">Editar Tortilla</a>
+
+<form action="/tortillas/{{_id}}/delete" method="POST">
+  <button type="submit">Borrar tortilla</button>
+</form>
