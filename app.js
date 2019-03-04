@@ -4,9 +4,31 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+const flash = require('connect-flash');
+
 const indexRouter = require('./routes/index');
+const authRouter = require('./routes/auth');
 
 const app = express();
+
+// Cookie
+app.use(session({
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection,
+    ttl: 24 * 60 * 60 // 1 day
+  }),
+  secret: 'some-string',
+  resave: true,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 24 * 60 * 60 * 1000
+  }
+}));
+
+// after the session middleware add the flash middleware
+app.use(flash());
 
 mongoose.connect('mongodb://localhost/tortillApp', {
   keepAlive: true,
@@ -24,7 +46,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Session
+// Makes the currentUser available in every page
+// note1: currentUser needs to match whatever you use in login/signup/logout routes
+// note2: if using passport, req.user instead
+app.use((req, res, next) => {
+  app.locals.currentUser = req.session.currentUser;
+  next();
+});
+
 app.use('/', indexRouter);
+app.use('/auth', authRouter);
 
 app.use((req, res, next) => {
   res.status(404);

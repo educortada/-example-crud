@@ -7,14 +7,18 @@ const Tortilla = require('../models/Tortilla');
 router.get('/', async (req, res, next) => {
   try {
     const tortillas = await Tortilla.find();
-    res.render('list', { tortillas });
+    res.render('tortilla/list', { tortillas });
   } catch (error) {
     next(error);
   }
 });
 
 router.get('/new', (req, res, next) => {
-  res.render('create-edit');
+  // Si no existe el usuario, redirect home.
+  if (!req.session.currentUser) {
+    return res.redirect('/');
+  }
+  res.render('tortilla/create-edit');
 });
 
 router.post('/', async (req, res, next) => {
@@ -36,7 +40,7 @@ router.get('/tortillas/:id', async (req, res, next) => {
   const { id } = req.params;
   try {
     const tortilla = await Tortilla.findById(id);
-    res.render('detail', tortilla);
+    res.render('tortilla/detail', tortilla);
   } catch (error) {
     next(error);
   }
@@ -46,7 +50,7 @@ router.get('/tortillas/:id/edit', async (req, res, next) => {
   const { id } = req.params;
   try {
     const tortilla = await Tortilla.findById(id);
-    res.render('create-edit', tortilla);
+    res.render('tortilla/create-edit', tortilla);
   } catch (error) {
     next(error);
   }
