@@ -3,6 +3,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const ObjectId = Schema.Types.ObjectId;
+
 const tortillaSchema = new Schema({
   name: {
     type: String,
@@ -14,6 +16,10 @@ const tortillaSchema = new Schema({
   size: {
     type: String,
     enum: ['small', 'medium', 'big']
+  },
+  creator: {
+    type: ObjectId, // ID que genera mongo del objeto
+    ref: 'User' // La referencia que apunta
   }
 });
 
